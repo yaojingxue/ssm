@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.UserMapper">
+    <select id="findById" parameterType="int" resultType="com.study.pojo.User">
+        select * from h_user where id = #{id}
+    </select>
+    <insert id="save" parameterType="com.study.pojo.User" >
+      INSERT INTO h_user (username ,password,email) VALUES (#{username},#{password},#{email})
+    </insert>
+    <update id="change" parameterType="com.study.pojo.User">
+        UPDATE  h_user set password=#{password} where id = #{id}
+    </update>
+    <delete id="remove" parameterType="int">
+        DELETE from h_user where id = #{id}
+    </delete>
+</mapper>
