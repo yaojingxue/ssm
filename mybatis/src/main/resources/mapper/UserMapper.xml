@@ -3,11 +3,38 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.mapper.UserMapper">
+    <!--mybatis 一级缓存 不需要配置自带 在同一个SqlSession 中相同的查询
+    二级缓存在mapper.xml 中配置 <cache></cache>，作用于同一个SqlSessionFactory-->
+    <cache></cache>
     <select id="findById" parameterType="int" resultType="com.study.pojo.User">
         select * from h_user where id = #{id}
     </select>
-    <insert id="save" parameterType="com.study.pojo.User" >
+    <select id="findAll"  resultType="com.study.pojo.User">
+        select * from h_user
+    </select>
+    <select id="findMap" parameterType="map" resultType="com.study.pojo.User">
+        select * from h_user where username=#{username} and password=#{password}
+    </select>
+    <select id="findParams"  resultType="com.study.pojo.User">
+        select * from h_user where username=#{username} and password=#{password}
+    </select>
+
+    <!--使用in（啊，吧，v）-->
+    <select id="findByIds"  resultType="com.study.pojo.User">
+        select * from h_user where id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+    <insert id="save" parameterType="com.study.pojo.User" useGeneratedKeys="true" keyProperty="id" >
       INSERT INTO h_user (username ,password,email) VALUES (#{username},#{password},#{email})
+    </insert>
+<!--  插入多条数据forech-->
+    <insert id="save1" parameterType="list" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO h_user (username ,password,email) VALUES 
+        <foreach collection="list" item="user" separator=",">
+            (#{user.username},#{user.password},#{user.email})
+        </foreach>
     </insert>
     <update id="change" parameterType="com.study.pojo.User">
         UPDATE  h_user set password=#{password} where id = #{id}
@@ -15,4 +42,17 @@
     <delete id="remove" parameterType="int">
         DELETE from h_user where id = #{id}
     </delete>
+<!--参数多个不确定选用<where><if></if></where>防止sql语句拼接错误-->
+    <select id="findMap1" parameterType="map" resultType="com.study.pojo.User">
+        select * from h_user
+        <where>
+            <if test="username !=null and username !=''">
+                username=#{username}
+            </if>
+            <if test="password !=null and password !=''">
+                and password=#{password}
+            </if>
+        </where>
+    </select>
+
 </mapper>

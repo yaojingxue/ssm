@@ -1,3 +1,4 @@
+import com.study.mapper.UserMapper;
 import com.study.pojo.User;
 import com.study.utils.MybatisUtil;
 import org.apache.ibatis.io.Resources;
@@ -46,13 +47,13 @@ public class MybatisTestCase {
     public  void UserInsertcase(){
         User user=new User();
         user.setPassword("123456789");
-        user.setUsername("无语");
+        user.setUsername("无-语");
         user.setEamil("5555@qq.com");
         SqlSession sqlSession= MybatisUtil.getSqlsession();
         sqlSession.update("com.study.mapper.UserMapper.save",user);
         logger.info("user对象"+user);
-        sqlSession.commit();
-        sqlSession.close();
+//        sqlSession.commit();
+//        sqlSession.close();
     }
     @Test
     public void UserUpdatecase(){
