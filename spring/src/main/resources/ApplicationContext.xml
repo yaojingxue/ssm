@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--初始化方法：init-method  销毁方法：destroy-method  类延迟加载（懒汉式）：lazy-init 修改为true
+    scope 默认值：singleton 修改为 prototype 则每次getBean 才会生成该类 不是单例-->
+
+    <!--AOP-->
+
+    <!--1. 将通知类放入Spring容器-->
+    <bean id="myAdivce" class="com.study.aop.MyAdvice"/>
+
+    <!--2.-->
+    <aop:config>
+        <!--2.1 引用通知类对象-->
+        <aop:aspect ref="myAdivce">
+            <!--2.2 定义切入点表达式-->
+            <aop:pointcut id="myPointCut" expression="execution(* com.study.Dao..*.*(..))"/>
+            <!--2.3 加入各种通知-->
+            <!--环绕通知-->
+            <aop:around method="aroundAdvice" pointcut-ref="myPointCut"/>
+
+
+            <!--前置通知-->
+            <!--<aop:before method="beforeAdvice" pointcut-ref="myPointCut"/>-->
+            <!--后置通知-->
+            <!--<aop:after-returning method="afterReturingAdvice" pointcut-ref="myPointCut" returning="result"/>-->
+            <!--异常通知-->
+            <!--<aop:after-throwing method="exceptionAdvice" pointcut-ref="myPointCut" throwing="e"/>-->
+            <!--最终通知-->
+            <!--<aop:after method="finallyAdvie" pointcut-ref="myPointCut"/>-->
+        </aop:aspect>
+    </aop:config>
+    <bean id="userDao" class="com.study.Dao.UserDao"/>
+    <!--起别名<alias name="userDao" alias="myDao"/>-->
+    <!--set注入写法-->
+    <!--<bean id="userService" class="com.study.service.UserService">-->
+        <!--<property name="userDao" ref="userDao"/>-->
+    <!--</bean>-->
+    <!--构造方法注入写法-->
+    <!--<bean id="userService" class="com.study.service.UserService">-->
+        <!--<constructor-arg name="userDao" ref="userDao"/>-->
+        <!--<constructor-arg name="name" value="Alex"/>-->
+    <!--</bean>-->
+    <!--<bean id="userService" class="com.study.service.UserService">-->
+        <!--<constructor-arg index="0" ref="userDao"/>-->
+        <!--<constructor-arg index="1" value="Alex"/>-->
+    <!--</bean>-->
+    <bean id="userService" class="com.study.service.UserService">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+</beans>
