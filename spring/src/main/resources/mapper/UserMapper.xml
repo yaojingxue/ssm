@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.UserMapper">
+    <!--mybatis 一级缓存 不需要配置自带 在同一个SqlSession 中相同的查询
+    二级缓存在mapper.xml 中配置 <cache></cache>，作用于同一个SqlSessionFactory且对应
+    实体类 -->
+    <cache/>
+    <insert id="save" parameterType="User">
+        INSERT INTO h_user(username,password,email) VALUE (#{username},#{password},#{email})
+    </insert>
+
+</mapper>

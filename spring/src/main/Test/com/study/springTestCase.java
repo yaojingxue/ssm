@@ -1,12 +1,11 @@
 package com.study;
 
-import com.study.Dao.UserDao;
+
+import com.study.mapper.UserMapper;
+import com.study.pojo.User;
 import com.study.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -33,12 +32,16 @@ public class springTestCase {
 //        UserService userService = (UserService) context.getBean("userService");
 //        userService.sayhai();
 //    }
-
     @Inject
     private UserService userService;
-
     @Test
     public void testSayHi() {
-        userService.sayhai();
+
+        User user =new User();
+        user.setUsername("springmys");
+        user.setUserpassword("772hsf55h");
+        user.setEmail("00wejrw@163.com");
+        userService.save(user);
+
     }
 }

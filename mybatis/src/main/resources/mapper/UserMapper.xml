@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.mapper.UserMapper">
     <!--mybatis 一级缓存 不需要配置自带 在同一个SqlSession 中相同的查询
-    二级缓存在mapper.xml 中配置 <cache></cache>，作用于同一个SqlSessionFactory-->
+    二级缓存在mapper.xml 中配置 <cache></cache>，作用于同一个SqlSessionFactory且对应
+    实体类 -->
     <cache></cache>
     <select id="findById" parameterType="int" resultType="com.study.pojo.User">
         select * from h_user where id = #{id}

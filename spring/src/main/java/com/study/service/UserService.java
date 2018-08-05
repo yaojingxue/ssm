@@ -1,29 +1,22 @@
 package com.study.service;
 
-import com.study.Dao.UserDao;
+import com.study.mapper.UserMapper;
+import com.study.pojo.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
- * Created by acer on 2018/8/4.
+ * Created by acer on 2018/8/5.
  */
 @Named
+@Transactional
 public class UserService {
     @Inject
-    private UserDao userDao;
-    //set 注入
-
-//    public void setUserDao(UserDao userDao) {
-//        this.userDao = userDao;
-//    }
-    //构造方法注入
-//    public UserService (UserDao userDao,String name){
-//        this.userDao = userDao;
-//        System.out.println("name-------------"+name);
-//    }
-    public void sayhai(){
-        System.out.println("sayhai----------");
-        userDao.save2();
+    private UserMapper userMapper;
+    public void save(User user){
+        userMapper.save(user);
     }
+
 }
