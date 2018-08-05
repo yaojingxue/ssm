@@ -1,8 +1,11 @@
 package com.study.Dao;
 
+import javax.inject.Named;
+
 /**
  * Created by acer on 2018/8/4.
  */
+@Named
 public class UserDao {
     public void save(){
         System.out.println("UserDao-------");

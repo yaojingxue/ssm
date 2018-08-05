@@ -10,6 +10,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.inject.Inject;
+
 /**
  * Created by acer on 2018/8/4.
  */
@@ -32,7 +34,7 @@ public class springTestCase {
 //        userService.sayhai();
 //    }
 
-    @Autowired
+    @Inject
     private UserService userService;
 
     @Test
