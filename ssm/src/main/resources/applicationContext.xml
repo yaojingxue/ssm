@@ -2,7 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!--自动扫描-->
     <context:component-scan base-package="com.study">
@@ -15,19 +16,40 @@
     <context:property-placeholder location="classpath:config.properties"/>
 
     <!--配置数据库连接池-->
-    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    <bean id="masterdataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${jdbc.driver}"/>
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <!--配置从数据库连接池 class  org.apache.commons.dbcp2.BasicDataSource
+    com.alibaba.druid.pool.DruidDataSource-->
+    <bean id="slavedataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${slave.jdbc.driver}"/>
+        <property name="url" value="${slave.jdbc.url}"/>
+        <property name="username" value="${slave.jdbc.username}"/>
+        <property name="password" value="${slave.jdbc.password}"/>
+    </bean>
+    <!-- 动态数据源，根据service接口上的注解来决定取哪个数据源 -->
+    <bean id="dataSource" class="com.study.utils.DynamicDataSource">
+        <property name="TargetDataSources">
+            <map key-type="java.lang.String">
+                <!-- write or slave -->
+                <entry key="slave" value-ref="slavedataSource"/>
+                <!-- read or master   -->
+                <entry key="master" value-ref="masterdataSource"/>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="slavedataSource"/>
+
     </bean>
 
     <!--基于JDBC事务-->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--proxy-target-class="true" order="1"-->
+    <tx:annotation-driven transaction-manager="transactionManager" order="1"/>
 
     <!--MyBatis-->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -39,4 +61,13 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.study.mapper"/>
     </bean>
+    <!--多个事务只能作用到一个数据源，且aop 事务要设置优先级别 order 数字 数字越大级别越低-->
+     <!--为业务逻辑层的方法解析@DataSource注解  为当前线程的HandleDataSource注入数据源-->
+    <bean id="dataSourceAspect" class="com.study.utils.DataSourceAspect" />
+    <aop:config proxy-target-class="true"  >
+        <aop:aspect id="dataSourceAspect" ref="dataSourceAspect" order="2" >
+            <aop:pointcut id="tx" expression="execution(* com.study.service..*.*(..)) "/>
+            <aop:before pointcut-ref="tx" method="before" />
+        </aop:aspect>
+    </aop:config>
 </beans>

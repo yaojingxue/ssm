@@ -1,5 +1,6 @@
 import com.study.pojo.Book;
 import com.study.service.BookService;
+import com.study.service.imp.ImpBookService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,13 +15,23 @@ import java.util.List;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:applicationContext.xml")
-public class UserMapperTestcase {
+public class UserMapperTestcase  {
     @Inject
-    private BookService bookService;
+    private ImpBookService impBookService;
     @Test
     public void findAlltest(){
-        List<Book> list=bookService.findAll();
+        List<Book> list=impBookService.findAll();
         Assert.assertEquals(list.size(),13);
 
+    }
+    @Test
+    public void findByIdtest(){
+        Book book= impBookService.findById(16);
+
+        Assert.assertEquals(book.getAuthor(),"水果");
+    }
+    @Test
+    public void deletetest(){
+        impBookService.deletBook(16);
     }
 }

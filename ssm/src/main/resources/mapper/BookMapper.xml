@@ -7,7 +7,16 @@
     <select id="findAll" resultType="Book">
         select * from book ORDER by id desc
     </select>
+    <select id="findById" parameterType="int" resultType="Book">
+        select * from book where id= #{id}
+    </select>
     <insert id="save" parameterType="Book">
         INSERT into book (booknumber,title,author,publishing,total,count)VALUE (#{booknumber},#{title},#{author},#{publishing},#{total},#{count})
     </insert>
+    <update id="updateBook" parameterType="Book">
+        update book set booknumber=#{booknumber},title=#{title},author=#{author},publishing=#{publishing},total=#{total},count=#{count} where id=#{id}
+    </update>
+    <delete id="deleteBook" parameterType="int">
+        delete from book where id=#{id}
+    </delete>
 </mapper>

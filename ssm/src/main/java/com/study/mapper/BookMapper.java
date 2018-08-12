@@ -10,5 +10,8 @@ import java.util.List;
 public interface BookMapper {
     List<Book> findAll();
     void save(Book book);
+    Book findById(Integer id);
+    void updateBook(Book book);
+    void deleteBook(Integer id);
 
 }

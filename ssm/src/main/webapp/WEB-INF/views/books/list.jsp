@@ -42,6 +42,10 @@
                 <th>${book.publishing}</th>
                 <th>${book.total}</th>
                 <th>${book.count}</th>
+                <td>
+                    <a href="/books/${book.id}">修改</a>
+                    <a href="/books/${book.id}/del">删除</a>
+                </td>
                 <th></th>
             </tr>
         </c:forEach>
@@ -49,6 +53,19 @@
     </table>
 
 </div>
+<%--<script src="/static/js/jquery-1.11.3.min.js"></script>--%>
+<%--<script>--%>
+    <%--$(function(){--%>
+
+        <%--$(".delLink").click(function(){--%>
+            <%--var id = $(this).attr("rel");--%>
+            <%--if(confirm("确定要删除吗?")) {--%>
+                <%--window.location.href = "/books/"+id+"/del";--%>
+            <%--}--%>
+        <%--});--%>
+
+    <%--});--%>
+<%--</script>--%>
 
 </body>
 </html>
